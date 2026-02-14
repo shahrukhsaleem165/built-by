@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agency. | High-End Digital Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#D9232D', // Aykays Red
+              black: '#1A1A1A', // Aykays Black
+              gray: '#F4F4F4',
+              dark: '#0A0A0A',
+            },
+            primary: '#D9232D',
+            secondary: '#1A1A1A',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #ffffff;
+      color: #1A1A1A;
+      overflow-x: hidden;
+      cursor: none; /* Hide default cursor for the custom one */
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Outfit', sans-serif;
+    }
+    .custom-cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: #D9232D;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: normal;
+      transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease;
+      transform: translate(-50%, -50%);
+      opacity: 0.8;
+    }
+    .custom-cursor.hovering {
+      width: 80px;
+      height: 80px;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050505;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 10px;
+    }
+    .text-outline {
+      -webkit-text-stroke: 1px #1A1A1A;
+      color: transparent;
+    }
+    .text-outline-white {
+      -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+      color: transparent;
+    }
+    .bg-grid {
+      background-image: radial-gradient(circle, #151515 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .mask-reveal {
+      overflow: hidden;
+    }
+    .mask-reveal span {
+      display: inline-block;
+      transform: translateY(100%);
+      transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .mask-reveal.active span {
+      transform: translateY(0%);
+    }
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      .custom-cursor { display: none; }
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom": "https://esm.sh/react-dom@^19.2.4",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.475.0",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
+    "framer-motion": "https://esm.sh/framer-motion@^12.4.2",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
