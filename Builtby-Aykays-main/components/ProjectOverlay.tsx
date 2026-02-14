@@ -82,11 +82,17 @@ const ProjectOverlay: React.FC<ProjectOverlayProps> = ({ project, onClose }) => 
 
                   <div className="md:col-span-8">
                     <h4 className="text-[10px] uppercase tracking-[0.4em] text-brand-black/50 mb-8">Brief</h4>
-                    <p className="text-xl md:text-3xl font-light text-brand-black/80 leading-tight mb-12">
+                    <p className={`${String(project.title).toLowerCase().includes('velocity') ? 'text-2xl md:text-3xl font-light text-zinc-600 leading-snug max-w-[60ch]' : 'text-xl md:text-3xl font-light text-brand-black/80 leading-tight max-w-[65ch]'} mb-12`}>
                       {project.longDescription}
                     </p>
                     <a 
-                      href={project.link} 
+                      href={
+                        String(project.title).toLowerCase().includes('velocity') && !project.link
+                          ? 'https://builtby.aykays.com/velocity-gym/'
+                          : (String(project.title).toLowerCase().includes('gifted') && !project.link
+                              ? 'https://builtby.aykays.com/gifted-hands/'
+                              : project.link)
+                      } 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="group inline-flex items-center gap-4 text-xs uppercase tracking-[0.3em] font-bold border-b border-black pb-2 hover:text-brand-red transition-colors"

@@ -18,9 +18,165 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [selectedProject, setSelectedProject] = useState<PortfolioItem | null>(null);
+  const [remoteProjects, setRemoteProjects] = useState<PortfolioItem[]>([]);
+
+  useEffect(() => {
+    const mediaCache: Record<number, string> = {};
+    const normalize = (u: any) => {
+      const s = typeof u === 'string' ? u : '';
+      if (!s) return '';
+      if (s.startsWith('http://')) return s.replace('http://', 'https://');
+      if (s.startsWith('//')) return 'https:' + s;
+      if (s.startsWith('/')) return 'https://tw.aykays.com' + s;
+      return s;
+    };
+    const getMediaUrl = async (id?: number): Promise<string> => {
+      if (!id || id <= 0) return '';
+      if (mediaCache[id]) return mediaCache[id];
+      try {
+        const r = await fetch(`https://tw.aykays.com/wp-json/wp/v2/media/${id}`);
+        const j = await r.json();
+        const url = normalize(j?.source_url || '');
+        if (url) mediaCache[id] = url;
+        return url;
+      } catch {
+        return '';
+      }
+    };
+    const mapToPortfolio = async (p: any): Promise<PortfolioItem | null> => {
+      const acf = p?.acf || {};
+      const title = acf.project_title || p?.title?.rendered;
+      if (!title) return null;
+      const imgCandidates = [
+        acf.hero_image?.sizes?.large,
+        acf.hero_image?.sizes?.medium_large,
+        acf.hero_image?.sizes?.full,
+        acf.hero_image?.url,
+        typeof acf.hero_image === 'string' ? acf.hero_image : '',
+        acf.project_image?.sizes?.large,
+        acf.project_image?.sizes?.medium_large,
+        acf.project_image?.sizes?.full,
+        acf.project_image?.url,
+        typeof acf.project_image === 'string' ? acf.project_image : '',
+        acf.cover?.sizes?.large,
+        acf.cover?.sizes?.medium_large,
+        acf.cover?.sizes?.full,
+        acf.cover?.url,
+        typeof acf.cover === 'string' ? acf.cover : '',
+        p?._embedded?.['wp:featuredmedia']?.[0]?.source_url
+      ];
+      let imageUrl = normalize(imgCandidates.find((x: any) => !!x) || '');
+      if (!imageUrl) {
+        const possibleIds: Array<number | undefined> = [
+          typeof acf.hero_image === 'number' ? acf.hero_image : acf.hero_image?.id,
+          typeof acf.project_image === 'number' ? acf.project_image : acf.project_image?.id,
+          typeof acf.cover === 'number' ? acf.cover : acf.cover?.id
+        ];
+        for (const pid of possibleIds) {
+          imageUrl = await getMediaUrl(pid);
+          if (imageUrl) break;
+        }
+      }
+      return {
+        id: p?.slug || String(p?.id || title),
+        title,
+        shortDescription: acf.project_brief || '',
+        longDescription: acf.project_description || acf.project_brief || '',
+        link: (() => {
+          const slug = (p?.slug || String(title || ''))
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+          const raw = acf.project_link || p?.link || '';
+          const s = typeof raw === 'string' ? raw : '';
+          const norm = (u: string) => {
+            if (!u) return '';
+            if (u.startsWith('http://')) return u.replace('http://', 'https://');
+            if (u.startsWith('//')) return 'https:' + u;
+            if (u.startsWith('/')) return 'https://builtby.aykays.com' + u;
+            if (/^[a-z0-9.-]+\.[a-z]{2,}([/:].*)?$/i.test(u)) return `https://${u}`;
+            return u;
+          };
+          const normalized = norm(s);
+          const needsBuiltby =
+            !normalized ||
+            /tw\.aykays\.com/i.test(normalized) ||
+            /\/projects\//i.test(normalized);
+          if (needsBuiltby && slug) {
+            return `https://builtby.aykays.com/${slug}/`;
+          }
+          return normalized;
+        })(),
+        categories: (() => {
+          const keys = acf && typeof acf === 'object' ? Object.keys(acf) : [];
+          const disciplineKey = keys.find(k => k.toLowerCase().includes('discipline'));
+          const raw =
+            (disciplineKey ? acf[disciplineKey] : undefined) ??
+            acf.discipline ??
+            acf.disciplines ??
+            acf.services ??
+            acf.categories;
+          if (Array.isArray(raw)) {
+            return raw
+              .map((x: any) => {
+                if (typeof x === 'string') return x;
+                if (x && typeof x === 'object') {
+                  return x.name || x.label || x.value || '';
+                }
+                return '';
+              })
+              .filter((s: string) => !!s);
+          }
+          if (typeof raw === 'string') {
+            return raw
+              .split(/[,\\n;]+/)
+              .map(s => s.trim())
+              .filter(Boolean);
+          }
+          if (raw && typeof raw === 'object' && typeof raw.value === 'string') {
+            return [raw.value];
+          }
+          return ['Development'];
+        })(),
+        imageUrl,
+        year: acf.project_year || '',
+        client: (() => {
+          const keys = acf && typeof acf === 'object' ? Object.keys(acf) : [];
+          const clientKey = keys.find(k => k.toLowerCase().includes('client') || k.toLowerCase().includes('brand'));
+          const v =
+            (clientKey ? acf[clientKey] : undefined) ??
+            acf.client ??
+            acf.client_name ??
+            acf.client_title ??
+            acf.brand ??
+            acf.company;
+          if (typeof v === 'string') return v;
+          if (v && typeof v === 'object') {
+            return v.name || v.label || v.value || '';
+          }
+          return '';
+        })()
+      };
+    };
+    (async () => {
+      try {
+        const r = await fetch('https://tw.aykays.com/wp-json/wp/v2/projects?per_page=50&_embed');
+        const arr = await r.json();
+        const mappedArr = Array.isArray(arr) ? await Promise.all(arr.map(mapToPortfolio)) : [];
+        const mapped = mappedArr.filter(Boolean) as PortfolioItem[];
+        setRemoteProjects(mapped);
+      } catch {
+        // silent
+      }
+    })();
+  }, []);
+
+  const allProjects = useMemo(() => {
+    return [...remoteProjects, ...portfolioData];
+  }, [remoteProjects]);
 
   const filteredProjects = useMemo(() => {
-    let results = portfolioData;
+    let results = allProjects;
     
     if (activeCategory !== 'All') {
       results = results.filter(p => p.categories.includes(activeCategory));
@@ -36,7 +192,7 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
     }
     
     return results;
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, allProjects]);
 
   // Handle URL hashes for direct project linking in single page
   useEffect(() => {
