@@ -5,7 +5,6 @@ import { portfolioData } from '../data';
 import ProjectCard from '../components/ProjectCard';
 import ProjectOverlay from '../components/ProjectOverlay';
 import { PortfolioItem } from '../types';
-// Fixed: Added ArrowRight to imports
 import { X, Filter, ArrowRight } from 'lucide-react';
 
 const categories = ['All', 'Photography', 'Development', 'Design', 'Branding'] as const;
@@ -172,7 +171,7 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
   }, []);
 
   const allProjects = useMemo(() => {
-    return [...remoteProjects, ...portfolioData];
+    return remoteProjects;
   }, [remoteProjects]);
 
   const filteredProjects = useMemo(() => {
@@ -200,14 +199,14 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
       const hash = window.location.hash;
       if (hash.startsWith('#/project/')) {
         const id = hash.replace('#/project/', '');
-        const p = portfolioData.find(item => item.id === id);
+        const p = allProjects.find(item => item.id === id);
         if (p) setSelectedProject(p);
       }
     };
     window.addEventListener('hashchange', handleHash);
     handleHash();
     return () => window.removeEventListener('hashchange', handleHash);
-  }, []);
+  }, [allProjects]);
 
   return (
     <div className="pt-40 pb-24 min-h-screen">
@@ -239,7 +238,7 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 1 }}
-              className="text-xl md:text-2xl font-light text-brand-black/70 max-w-2xl leading-relaxed"
+              className="text-xl md:text-2xl font-light text-zinc-400 max-w-2xl leading-relaxed"
             >
               We are a creative studio delivering world-class digital experiences for high-end luxury brands and innovative startups.
             </motion.p>
@@ -248,11 +247,11 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 1 }}
-              className="flex gap-16 text-[10px] uppercase tracking-[0.3em] font-medium text-brand-black/50"
+              className="flex gap-16 text-[10px] uppercase tracking-[0.3em] font-medium text-white/40"
             >
-              <div>Role <br /><span className="text-brand-black">Full Service</span></div>
-              <div>Expertise <br /><span className="text-brand-black">Interactive</span></div>
-              <div>Location <br /><span className="text-brand-black">Worldwide</span></div>
+              <div>Role <br /><span className="text-white">Full Service</span></div>
+              <div>Expertise <br /><span className="text-white">Interactive</span></div>
+              <div>Location <br /><span className="text-white">Worldwide</span></div>
             </motion.div>
           </div>
         </div>
@@ -287,12 +286,12 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
               initial={{ opacity: 0, x: -20, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -20, scale: 0.9 }}
-              className="inline-flex items-center gap-3 px-5 py-2.5 bg-zinc-100 text-black rounded-full pointer-events-auto shadow-xl"
+              className="inline-flex items-center gap-3 px-5 py-2.5 bg-white/5 text-white rounded-full pointer-events-auto shadow-xl border border-white/10"
             >
               <span className="text-[10px] uppercase tracking-widest font-bold">Showing results for: {searchQuery}</span>
               <button 
                 onClick={onClearSearch} 
-                className="hover:rotate-90 transition-transform p-1 bg-black/5 rounded-full"
+                className="hover:rotate-90 transition-transform p-1 bg-white/10 rounded-full"
               >
                 <X size={12} />
               </button>

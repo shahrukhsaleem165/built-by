@@ -28,12 +28,12 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="bg-white min-h-screen selection:bg-brand-red selection:text-white relative overflow-x-hidden text-brand-black">
+      <div className="bg-brand-dark bg-grid min-h-screen selection:bg-brand-red selection:text-white relative overflow-x-hidden text-white">
         <CustomCursor />
         
         {/* Dynamic Background Accents */}
-        <div className="fixed top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-brand-red/5 rounded-full blur-[160px] pointer-events-none" />
-        <div className="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-brand-red/5 rounded-full blur-[140px] pointer-events-none" />
+        <div className="fixed top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-white/5 rounded-full blur-[200px] pointer-events-none" />
+        <div className="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-white/5 rounded-full blur-[180px] pointer-events-none" />
 
         <Navbar onSearchOpen={() => setIsSearchOpen(true)} />
         

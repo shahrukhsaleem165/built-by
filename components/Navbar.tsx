@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchOpen }) => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-5 flex justify-between items-center ${scrolled ? 'bg-white/80 backdrop-blur-md border-b border-black/5 shadow-sm py-4' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-5 flex justify-between items-center ${scrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.8)] py-4' : 'bg-transparent'}`}>
       <Link to="/" className="block w-20 md:w-20">
          <img src="/assets/images/Aykays.png" alt="Aykays" className="w-full h-auto object-contain" />
       </Link>
@@ -36,8 +36,8 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchOpen }) => {
           <Link
             key={link.path}
             to={link.path}
-            className={`text-[13px] uppercase tracking-[0.1em] hover:text-brand-red transition-colors font-medium ${
-              location.pathname === link.path ? 'text-brand-red' : 'text-brand-black/70'
+            className={`text-[13px] uppercase tracking-[0.1em] hover:text-white transition-colors font-medium ${
+              location.pathname === link.path ? 'text-white' : 'text-white/60'
             }`}
           >
             {link.name}
@@ -45,17 +45,17 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchOpen }) => {
         ))}
         <button 
           onClick={onSearchOpen}
-          className="flex items-center gap-3 group px-4 py-2 rounded-full border border-black/10 hover:border-brand-red/20 hover:bg-brand-red/5 transition-all"
+          className="flex items-center gap-3 group px-4 py-2 rounded-full border border-white/10 hover:border-white/30 hover:bg-white/5 transition-all"
         >
-          <Search size={16} strokeWidth={2} className="text-brand-black/60 group-hover:text-brand-red transition-colors" />
-          <div className="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity text-brand-black">
+          <Search size={16} strokeWidth={2} className="text-white/60 group-hover:text-white transition-colors" />
+          <div className="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition-opacity text-white/60">
             <Command size={12} />
             <span className="text-[11px] font-mono">K</span>
           </div>
         </button>
       </div>
 
-      <div className="md:hidden flex items-center space-x-6 text-brand-black">
+      <div className="md:hidden flex items-center space-x-6 text-white">
         <button onClick={onSearchOpen} className="p-2">
           <Search size={20} />
         </button>
@@ -72,7 +72,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchOpen }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 bg-white z-40 flex flex-col items-start justify-center p-12 text-brand-black md:hidden"
+            className="fixed inset-0 bg-brand-dark z-40 flex flex-col items-start justify-center p-12 text-white md:hidden"
           >
              <div className="space-y-6">
                {['Work', 'Studio', 'Services', 'Contact'].map((item) => (
@@ -93,12 +93,12 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchOpen }) => {
               ))}
              </div>
              
-             <div className="mt-auto pt-12 border-t border-black/5 w-full flex justify-between items-end">
-               <div className="text-[10px] uppercase tracking-widest text-gray-500">
+             <div className="mt-auto pt-12 border-t border-white/10 w-full flex justify-between items-end">
+               <div className="text-[10px] uppercase tracking-widest text-white/50">
                  Office <br />
-                 <span className="text-brand-black">London / UK</span>
+                 <span className="text-white">London / UK</span>
                </div>
-               <div className="text-[10px] uppercase tracking-widest text-zinc-500 text-right">
+               <div className="text-[10px] uppercase tracking-widest text-white/50 text-right">
                  Say Hi <br />
                  <span className="text-white">hello@agency.com</span>
                </div>
