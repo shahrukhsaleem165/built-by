@@ -160,7 +160,7 @@ const Home: React.FC<HomeProps> = ({ searchQuery, onClearSearch }) => {
     };
     (async () => {
       try {
-        const r = await fetch('https://tw.aykays.com/wp-json/wp/v2/projects?per_page=50&_embed');
+        const r = await fetch('https://tw.aykays.com/wp-json/wp/v2/projects?per_page=50&orderby=date&order=asc&_embed');
         const arr = await r.json();
         const mappedArr = Array.isArray(arr) ? await Promise.all(arr.map(mapToPortfolio)) : [];
         const mapped = mappedArr.filter(Boolean) as PortfolioItem[];
