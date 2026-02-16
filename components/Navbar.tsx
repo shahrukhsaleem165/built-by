@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Menu, X, Command } from 'lucide-react';
+import AykaysLogo from '../assets/images/Aykays.png';
 
 interface NavbarProps {
   onSearchOpen: () => void;
@@ -28,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({ onSearchOpen }) => {
   return (
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 px-6 md:px-12 py-5 flex justify-between items-center ${scrolled ? 'bg-black/80 backdrop-blur-md border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.8)] py-4' : 'bg-transparent'}`}>
       <Link to="/" className="block w-20 md:w-20">
-         <img src="/assets/images/Aykays.png" alt="Aykays" className="w-full h-auto object-contain" />
+         <img src={AykaysLogo} alt="Aykays" className="w-full h-auto object-contain" />
       </Link>
 
       <div className="hidden md:flex items-center space-x-12">
